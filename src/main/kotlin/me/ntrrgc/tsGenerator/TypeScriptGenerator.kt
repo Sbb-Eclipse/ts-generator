@@ -20,10 +20,7 @@ import java.beans.Introspector
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.*
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.full.superclasses
+import kotlin.reflect.full.*
 import kotlin.reflect.jvm.javaType
 
 /**
@@ -241,6 +238,23 @@ class TypeScriptGenerator(
 
                     val formattedPropertyType = formatKType(propertyType).formatWithoutParenthesis()
                     "    $propertyName: $formattedPropertyType;\n"
+                }
+                .joinToString("") +
+
+            klass.declaredMemberFunctions
+                .filter {
+                    it.visibility == KVisibility.PUBLIC
+                }
+                .map {function ->
+                    val args = function.parameters
+                        .filter { it.kind != KParameter.Kind.INSTANCE}
+                        .map {
+                            val paramType = formatKType(it.type).formatWithoutParenthesis()
+                            "${it.name}: ${paramType}"
+                        }
+                        .joinToString(", ")
+                    val returnType = formatKType(function.returnType).formatWithoutParenthesis()
+                    "    ${function.name}($args): $returnType;\n"
                 }
                 .joinToString("") +
             "}"
