@@ -133,6 +133,7 @@ class TypeScriptGenerator(
             Byte::class -> intTypeName
             Float::class, Double::class -> "number"
             Any::class -> "any"
+            Unit::class -> "void"
             else -> {
                 @Suppress("IfThenToElvis")
                 if (classifier is KClass<*>) {
