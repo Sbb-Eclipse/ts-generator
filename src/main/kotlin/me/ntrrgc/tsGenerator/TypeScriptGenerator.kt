@@ -253,7 +253,7 @@ class TypeScriptGenerator(
                             }
                             .joinToString(", ")
                     val returnType = formatKType(konstructor.returnType).formatWithoutParenthesis()
-                    "    constructor($args): $returnType;\n"
+                    "    constructor($args);\n"
                 }
                 .joinToString("") +
 
