@@ -242,6 +242,21 @@ class TypeScriptGenerator(
                 }
                 .joinToString("") +
 
+            klass.constructors
+                .filter { it.visibility == KVisibility.PUBLIC }
+                .map {konstructor ->
+                    val args = konstructor.parameters
+                            .filter { it.kind != KParameter.Kind.INSTANCE}
+                            .map {
+                                val paramType = formatKType(it.type).formatWithoutParenthesis()
+                                "${it.name}: ${paramType}"
+                            }
+                            .joinToString(", ")
+                    val returnType = formatKType(konstructor.returnType).formatWithoutParenthesis()
+                    "    constructor($args): $returnType;\n"
+                }
+                .joinToString("") +
+
             klass.declaredMemberFunctions
                 .filter {
                     it.visibility == KVisibility.PUBLIC
