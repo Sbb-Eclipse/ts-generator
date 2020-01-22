@@ -187,12 +187,12 @@ class TypeScriptGenerator(
     }
 
     private fun generateEnum(klass: KClass<*>): String {
-        return "type ${klass.simpleName} = ${klass.java.enumConstants
+        return "enum ${klass.simpleName} { ${klass.java.enumConstants
             .map { constant: Any ->
-                constant.toString().toJSString()
+                constant.toString() + " = " + constant.toString().toJSString()
             }
-            .joinToString(" | ")
-        };"
+            .joinToString(", ")
+        }}"
     }
 
     private fun generateInterface(klass: KClass<*>): String {
